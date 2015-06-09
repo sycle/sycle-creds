@@ -1,10 +1,9 @@
 'use strict';
 
 var chai = require('chai');
-var sycle = require('sycle');
-var authorizer = require('sycle-core').authorizer;
 var async = require('async');
-var _ = require('underscore');
+var _ = require('lodash');
+var sycle = require('sycle');
 chai.config.includeStack = true;
 
 exports.t = exports.assert = chai.assert;
@@ -23,18 +22,17 @@ exports.donner = function donner(n, func) {
     };
 };
 
-exports.sapp = function (options) {
+exports.morkApplication = function (options) {
     options = options || {};
     options.db = options.db || {
         driver: 'redis-hq'
     };
 
-    var sapp = new sycle.Application();
+    var sapp = sycle({ loadBuiltinModels: true });
     sapp.setAll(options);
-    sapp.phase(sycle.boot.module('sycle-core'));
     sapp.phase(sycle.boot.module('./'));
     sapp.phase(sycle.boot.database(options.db));
-    sapp.phase(authorizer);
+    sapp.phase(sycle.authorizer);
     return sapp;
 };
 

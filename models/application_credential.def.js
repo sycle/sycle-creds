@@ -6,6 +6,7 @@
  */
 module.exports = function (t) {
     return {
+        name: 'ApplicationCredential',
         properties: {
             provider: {type: String, index: true}, // facebook, google, twitter, linkedIn
             authScheme: {type: String}, // oAuth, oAuth 2.0, OpenID, OpenID Connect

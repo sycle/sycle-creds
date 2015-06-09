@@ -8,6 +8,32 @@ describe('ApplicationCredential', function () {
     var sapp, appId;
     var Application, ApplicationCredential;
 
+    beforeEach(function (done) {
+        sapp = s.morkApplication();
+        sapp.boot(function (err) {
+            Application = sapp.model('Application');
+            ApplicationCredential = sapp.model('ApplicationCredential');
+            done(err);
+        });
+    });
+
+    beforeEach(function (done) {
+        s.cleanup(sapp, done);
+    });
+
+    beforeEach(function (done) {
+        Application.create({
+            name: 'MyApp'
+        }, function (err, app) {
+            appId = app.id;
+            done(err);
+        });
+    });
+
+    afterEach(function (done) {
+        s.cleanup(sapp, done);
+    });
+
     it('supports linked 3rd party accounts', function (done) {
         ApplicationCredential.link(appId, 'facebook', 'oAuth 2.0', {
                 clientID: 'facebook-client-id-1',
@@ -69,30 +95,6 @@ describe('ApplicationCredential', function () {
         });
     });
 
-    beforeEach(function (done) {
-        sapp = s.sapp();
-        sapp.boot(function (err) {
-            Application = sapp.model('Application');
-            ApplicationCredential = sapp.model('ApplicationCredential');
-            done(err);
-        });
-    });
 
-    beforeEach(function (done) {
-        s.cleanup(sapp, done);
-    });
-
-    beforeEach(function (done) {
-        Application.create({
-            name: 'MyApp'
-        }, function (err, app) {
-            appId = app.id;
-            done(err);
-        });
-    });
-
-    afterEach(function (done) {
-        s.cleanup(sapp, done);
-    });
 
 });

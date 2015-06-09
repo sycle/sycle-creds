@@ -1,12 +1,13 @@
 "use strict";
 
-var sec = require('sycle-core').sec;
+var sec = require('sycle').security;
 
 /*!
  * Default UserIdentity properties.
  */
 module.exports = function (t) {
     return {
+        name: 'UserIdentity',
         properties: {
             provider: {type: String, index: true}, // facebook, google, twitter, linkedin
             authScheme: {type: String}, // oAuth, oAuth 2.0, OpenID, OpenID Connect

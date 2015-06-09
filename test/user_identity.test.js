@@ -8,11 +8,30 @@ describe('UserIdentity', function () {
     var sapp;
     var User, UserIdentity, UserCredential;
 
+    beforeEach(function (done) {
+        sapp = s.morkApplication();
+        sapp.boot(function (err) {
+            User = sapp.model('User');
+            UserIdentity = sapp.model('UserIdentity');
+            UserCredential = sapp.model('UserCredential');
+            done(err);
+        });
+    });
+
+    beforeEach(function (done) {
+        s.cleanup(sapp, done);
+    });
+
+    afterEach(function (done) {
+        s.cleanup(sapp, done);
+    });
+
     it('supports 3rd party login', function (done) {
         UserIdentity.login('facebook', 'oAuth 2.0',
-            {emails: [
-                {value: 'foo@bar.com'}
-            ], id: 'f123', username: 'xyz'
+            {
+                emails: [
+                    {value: 'foo@bar.com'}
+                ], id: 'f123', username: 'xyz'
             }, {accessToken: 'at1', refreshToken: 'rt1'},
             {autoLogin: false},
             function (err, user, identity, token) {
@@ -51,9 +70,10 @@ describe('UserIdentity', function () {
                 authScheme: 'oAuth 2.0'
             }, function () {
                 UserIdentity.login('facebook', 'oAuth 2.0',
-                    {emails: [
-                        {value: 'abc1@facebook.com'}
-                    ], id: 'f456', username: 'xyz'
+                    {
+                        emails: [
+                            {value: 'abc1@facebook.com'}
+                        ], id: 'f456', username: 'xyz'
                     }, {accessToken: 'at2', refreshToken: 'rt2'}, function (err, user, identity, token) {
                         t(!err, 'No error should be reported');
                         t.equal(user.username, 'facebook.abc');
@@ -87,9 +107,10 @@ describe('UserIdentity', function () {
             password: 'pass'
         }, function () {
             UserIdentity.login('facebook', 'oAuth 2.0',
-                {emails: [
-                    {value: '789@facebook.com'}
-                ], id: 'f789', username: 'ttt'
+                {
+                    emails: [
+                        {value: '789@facebook.com'}
+                    ], id: 'f789', username: 'ttt'
                 }, {accessToken: 'at3', refreshToken: 'rt3'}, function (err, user, identity, token) {
                     t(!err, 'No error should be reported');
                     t.equal(user.username, 'facebook.789');
@@ -116,9 +137,10 @@ describe('UserIdentity', function () {
 
     it('supports 3rd party login with profileToUser option', function (done) {
         UserIdentity.login('facebook', 'oAuth 2.0',
-            {emails: [
-                {value: 'foo@baz.com'}
-            ], id: 'f100', username: 'joy'
+            {
+                emails: [
+                    {value: 'foo@baz.com'}
+                ], id: 'f100', username: 'joy'
             }, {accessToken: 'at1', refreshToken: 'rt1'}, {
                 profileToUser: function (provider, profile) {
                     return {
@@ -126,7 +148,8 @@ describe('UserIdentity', function () {
                         email: profile.emails[0].value,
                         password: 'sss'
                     };
-                }}, function (err, user, identity, token) {
+                }
+            }, function (err, user, identity, token) {
                 t(!err, 'No error should be reported');
                 t.equal(user.username, 'joy@facebook');
                 t.equal(user.email, 'foo@baz.com');
@@ -150,23 +173,5 @@ describe('UserIdentity', function () {
     });
 
 
-    beforeEach(function (done) {
-        sapp = s.sapp();
-        sapp.boot(function (err) {
-            User = sapp.model('User');
-            UserIdentity = sapp.model('UserIdentity');
-            UserCredential = sapp.model('UserCredential');
-            done(err);
-        });
-    });
-
-    beforeEach(function (done) {
-        s.cleanup(sapp, done);
-    });
-
-
-    afterEach(function (done) {
-        s.cleanup(sapp, done);
-    });
 
 });
